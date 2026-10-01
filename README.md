@@ -1,4 +1,4 @@
-# 🎥 Real-time Abnormal Behavior Detection System
+#  Real-time Abnormal Behavior Detection System
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.9%2B-blue?logo=python&logoColor=white" alt="Python Version" />
@@ -13,7 +13,7 @@ Hệ thống Camera giám sát thông minh nhận diện hành vi bất thườn
 
 ---
 
-## 📋 Mục lục
+##  Mục lục
 - [1. Tính năng nổi bật](#1-tính-năng-nổi-bật)
 - [2. Danh mục hành vi nhận diện](#2-danh-mục-hành-vi-nhận-diện)
 - [3. Kiến trúc hệ thống (Pipeline)](#3-kiến-trúc-hệ-thống-pipeline)
@@ -31,14 +31,14 @@ Hệ thống Camera giám sát thông minh nhận diện hành vi bất thườn
 
 ## 1. Tính năng nổi bật
 
-- ⚡ **Nhận diện Real-time (FPS cao):** Tối ưu hóa pipeline xử lý, chạy mượt mà trên GPU (CUDA) và hỗ trợ CPU.
-- 👥 **Multi-person Tracking:** Định danh đồng thời nhiều người trong khung hình thông qua thuật toán tracking BoT-SORT.
-- 🔒 **Bảo vệ quyền riêng tư (Privacy-preserving):** Chỉ trích xuất và huấn luyện trên 17 điểm tọa độ khớp xương (Skeleton Keypoints), không lưu trữ và không phân tích khuôn mặt/đặc trưng ngoại hình.
-- 🎯 **Cơ chế Hybrid thông minh:**
+-  **Nhận diện Real-time (FPS cao):** Tối ưu hóa pipeline xử lý, chạy mượt mà trên GPU (CUDA) và hỗ trợ CPU.
+-  **Multi-person Tracking:** Định danh đồng thời nhiều người trong khung hình thông qua thuật toán tracking BoT-SORT.
+-  **Bảo vệ quyền riêng tư (Privacy-preserving):** Chỉ trích xuất và huấn luyện trên 17 điểm tọa độ khớp xương (Skeleton Keypoints), không lưu trữ và không phân tích khuôn mặt/đặc trưng ngoại hình.
+-  **Cơ chế Hybrid thông minh:**
   - Hành vi động phức tạp (đánh nhau, té ngã) được suy luận qua mạng Deep Learning (BiLSTM).
   - Hành vi tĩnh/không gian (đứng chờ, lảng vảng) được xử lý bằng giải thuật Rule-based tính toán thời gian và dịch chuyển bounding box, tránh quá tải cho model AI.
-- 📊 **Trực quan hóa Dashboard:** Giao diện Web Streamlit hiện đại, cung cấp biểu đồ phân tích tần suất vi phạm, nhật ký sự kiện và xem lại video vi phạm.
-- 🛡️ **Lọc nhiễu dự đoán (Temporal Smoothing):** Áp dụng Majority Voting trên chuỗi các frame gần nhất, giảm tối đa hiện tượng nhấp nháy nhãn (flickering).
+-  **Trực quan hóa Dashboard:** Giao diện Web Streamlit hiện đại, cung cấp biểu đồ phân tích tần suất vi phạm, nhật ký sự kiện và xem lại video vi phạm.
+-  **Lọc nhiễu dự đoán (Temporal Smoothing):** Áp dụng Majority Voting trên chuỗi các frame gần nhất, giảm tối đa hiện tượng nhấp nháy nhãn (flickering).
 
 ---
 
