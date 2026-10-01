@@ -1,0 +1,74 @@
+# Weights & Models
+weights/**/*.pth
+weights/**/*.pt
+weights/**/*.onnx
+weights/**/*.pkl
+!weights/detection/.gitkeep
+!weights/classification/.gitkeep
+!weights/classification/checkpoints/.gitkeep
+
+# Data 
+data/raw/**/*
+data/processed/**/*
+data/cache/**/*
+data/outputs/**/*
+data/logs/**/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/cache/.gitkeep
+!data/outputs/.gitkeep
+!data/logs/.gitkeep
+
+# Video files & Tensors
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.flv
+*.npy
+*.npz
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.Python
+pip-log.txt
+.tox/
+.coverage
+.cache
+.pytest_cache/
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
+miniconda3/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+
+# Streamlit
+.streamlit/
+
+# Environment variables
+.env
+.env.local
+
+# Temporary & OS files
+*.tmp
+*.temp
+*.log
+*.lock
+Thumbs.db
+desktop.ini
