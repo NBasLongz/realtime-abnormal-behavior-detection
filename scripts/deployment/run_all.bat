@@ -1,23 +1,21 @@
 @echo off
+echo ====================================================
 echo Starting Abnormal Behavior Detection System...
+echo ====================================================
 echo.
 
-REM Start API in new window
-start "API Server" cmd /k "cd api && python app.py"
+REM Start API backend in new window
+start "API Server" cmd /k "cd /d %~dp0..\.. && python -m uvicorn api.app:app --host 0.0.0.0 --port 8000 --reload"
 
-REM Wait a bit for API to start
-timeout /t 5 /nobreak >nul
+REM Wait 3 seconds for API to initialize
+timeout /t 3 /nobreak >nul
 
-REM Start Web in new window
-start "Web Interface" cmd /k "cd web && streamlit run app.py"
+REM Start React frontend in new window
+start "Web Interface" cmd /k "cd /d %~dp0..\..\behavior-detection-web && npm run dev"
 
 echo.
 echo System is starting...
-echo API: http://localhost:8000
-echo Web: http://localhost:8501
+echo API Backend:  http://localhost:8000
+echo Web Frontend: http://localhost:3000
 echo.
-echo Press any key to stop all services...
-pause >nul
-
-REM Kill Python processes (careful with this!)
-taskkill /F /IM python.exe
+pause
