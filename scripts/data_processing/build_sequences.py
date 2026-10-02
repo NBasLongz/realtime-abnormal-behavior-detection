@@ -78,7 +78,13 @@ def main():
         out_dir.mkdir(parents=True, exist_ok=True)
         print(f"\n[{cls.upper()}]")
 
-        for video_file in class_dir.glob("*.mp4"):
+        extensions = ["*.mp4", "*.avi", "*.mov", "*.mkv"]
+        video_files = []
+        for ext in extensions:
+            video_files.extend(class_dir.glob(ext))
+        video_files = sorted(list(set(video_files)))
+
+        for video_file in video_files:
             if len(list(out_dir.glob(f"{video_file.stem}_id*.npy"))) > 0:
                 continue
             
