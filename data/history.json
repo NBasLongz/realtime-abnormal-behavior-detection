@@ -1,0 +1,152 @@
+[
+  {
+    "id": 15,
+    "time": 1790915021954,
+    "file": "fight_001.mp4",
+    "duration": 6.7,
+    "resolution": "1920x1080",
+    "fps": 15.4,
+    "frames": 103,
+    "output_url": "/api/outputs/analyzed_fight_001.mp4"
+  },
+  {
+    "id": 1,
+    "time": 1790914963730,
+    "file": "camera_01.mp4",
+    "duration": 18.0,
+    "resolution": "1920x1080",
+    "fps": 30,
+    "frames": 540,
+    "output_url": null
+  },
+  {
+    "id": 2,
+    "time": 1790903443730,
+    "file": "camera_02.mp4",
+    "duration": 55.1,
+    "resolution": "1920x1080",
+    "fps": 30,
+    "frames": 1653,
+    "output_url": null
+  },
+  {
+    "id": 3,
+    "time": 1790891923730,
+    "file": "camera_03.mp4",
+    "duration": 37.2,
+    "resolution": "1280x720",
+    "fps": 25,
+    "frames": 930,
+    "output_url": null
+  },
+  {
+    "id": 4,
+    "time": 1790880403730,
+    "file": "camera_04.mp4",
+    "duration": 19.3,
+    "resolution": "1280x720",
+    "fps": 24,
+    "frames": 463,
+    "output_url": null
+  },
+  {
+    "id": 5,
+    "time": 1790868883730,
+    "file": "camera_05.mp4",
+    "duration": 56.4,
+    "resolution": "1920x1080",
+    "fps": 29.97,
+    "frames": 1690,
+    "output_url": null
+  },
+  {
+    "id": 6,
+    "time": 1790857363730,
+    "file": "camera_06.mp4",
+    "duration": 38.5,
+    "resolution": "854x480",
+    "fps": 30,
+    "frames": 1155,
+    "output_url": null
+  },
+  {
+    "id": 7,
+    "time": 1790845843730,
+    "file": "camera_07.mp4",
+    "duration": 20.6,
+    "resolution": "1920x1080",
+    "fps": 30,
+    "frames": 618,
+    "output_url": null
+  },
+  {
+    "id": 8,
+    "time": 1790834323730,
+    "file": "camera_08.mp4",
+    "duration": 57.0,
+    "resolution": "1920x1080",
+    "fps": 25,
+    "frames": 1425,
+    "output_url": null
+  },
+  {
+    "id": 9,
+    "time": 1790822803730,
+    "file": "camera_09.mp4",
+    "duration": 39.1,
+    "resolution": "1280x720",
+    "fps": 24,
+    "frames": 938,
+    "output_url": null
+  },
+  {
+    "id": 10,
+    "time": 1790811283730,
+    "file": "camera_10.mp4",
+    "duration": 21.2,
+    "resolution": "1280x720",
+    "fps": 29.97,
+    "frames": 635,
+    "output_url": null
+  },
+  {
+    "id": 11,
+    "time": 1790799763730,
+    "file": "camera_11.mp4",
+    "duration": 58.3,
+    "resolution": "1920x1080",
+    "fps": 30,
+    "frames": 1749,
+    "output_url": null
+  },
+  {
+    "id": 12,
+    "time": 1790788243730,
+    "file": "camera_12.mp4",
+    "duration": 40.4,
+    "resolution": "854x480",
+    "fps": 30,
+    "frames": 1212,
+    "output_url": null
+  },
+  {
+    "id": 13,
+    "time": 1790776723730,
+    "file": "camera_13.mp4",
+    "duration": 22.5,
+    "resolution": "1920x1080",
+    "fps": 25,
+    "frames": 562,
+    "output_url": null
+  },
+  {
+    "id": 14,
+    "time": 1790765203730,
+    "file": "camera_14.mp4",
+    "duration": 59.6,
+    "resolution": "1920x1080",
+    "fps": 24,
+    "frames": 1430,
+    "output_url": null
+  }
+]
