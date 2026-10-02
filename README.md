@@ -13,7 +13,7 @@
 
 Hệ thống Camera giám sát thông minh nhận diện hành vi bất thường theo thời gian thực (Real-time). Dự án ứng dụng kiến trúc **Hybrid (Lai)** kết hợp **YOLOv8-Pose**, mạng nơ-ron sâu nhẹ **1D-CNN + BiLSTM + Attention** và thuật toán **Rule-based Spatio-Temporal** nhằm đạt tốc độ FPS cao, độ trễ thấp và bảo vệ quyền riêng tư người dùng. 
 
-Hệ thống hỗ trợ đầy đủ từ **Core AI suy luận thời gian thực**, **Backend API (FastAPI)** cho tới **Giao diện Web Dashboard hiện đại (React + Vite)** và ứng dụng Streamlit.
+Hệ thống hỗ trợ đầy đủ từ **Core AI suy luận thời gian thực**, **Backend API (FastAPI)** cho tới **Giao diện Web Dashboard hiện đại (React + Vite)**.
 
 ---
 
@@ -90,7 +90,7 @@ flowchart TD
     M --> N[Vẽ Skeleton & BBox lên Frame]
     M --> O[Ghi nhận sự kiện & JSON Logs]
     O --> P[FastAPI Backend / REST API]
-    P --> Q[React Vite Web Dashboard / Streamlit]
+    P --> Q[React Vite Web Dashboard]
 ```
 
 ---
@@ -143,9 +143,6 @@ Abnormal_Behavior_Detection_System/
 │   └── training/
 │       ├── dataset.py               # DataLoader & Kỹ thuật Augmentation
 │       └── evaluation.py            # Đánh giá mô hình (F1, Confusion Matrix)
-├── web/
-│   ├── app.py                       # Streamlit Dashboard (phương án giao diện phụ)
-│   └── pages/analysis.py
 ├── scripts/
 │   ├── data_processing/
 │   │   ├── download_datasets.py     # Tự động tải & phân loại Benchmark Datasets
@@ -164,7 +161,6 @@ Abnormal_Behavior_Detection_System/
 │   └── logs/                        # File CSV lưu nhật ký sự kiện
 ├── start_system.bat                 # Script 1-Click khởi chạy toàn bộ hệ thống
 ├── run_webcam_demo.py               # Kịch bản chạy nhận diện qua Webcam độc lập
-├── run_web.py                       # Kịch bản khởi động Streamlit Dashboard
 └── requirements.txt                 # Danh sách thư viện Python phụ thuộc
 ```
 
@@ -275,14 +271,6 @@ python run_webcam_demo.py
 
 *Phím tắt:* Bấm **`ESC`** trên cửa sổ video để dừng chương trình.
 
----
-
-### Cách 4: Khởi chạy giao diện phụ (Streamlit Dashboard)
-
-```bash
-python run_web.py
-```
-Truy cập tại địa chỉ: `http://localhost:8501`.
 
 ---
 

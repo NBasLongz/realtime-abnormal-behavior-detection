@@ -1,14 +1,14 @@
 #!/bin/bash
 # scripts/deployment/run_web.sh
 
-echo "Starting Web interface..."
+echo "Starting React Web interface (Vite)..."
 
-# Check Python
-if ! command -v python &> /dev/null; then
-    echo "Python is not installed!"
+# Check Node.js
+if ! command -v npm &> /dev/null; then
+    echo "Node.js / npm is not installed!"
     exit 1
 fi
 
 # Start Web
-cd web
-streamlit run app.py
+cd "$(dirname "$0")/../../behavior-detection-web" || exit
+npm run dev
