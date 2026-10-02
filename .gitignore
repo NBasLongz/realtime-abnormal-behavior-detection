@@ -58,8 +58,12 @@ miniconda3/
 *~
 .DS_Store
 
-# Streamlit
+# Streamlit & Frontend
 .streamlit/
+node_modules/
+dist/
+dist-ssr/
+*.local
 
 # Environment variables
 .env
