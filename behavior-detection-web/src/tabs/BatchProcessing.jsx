@@ -60,9 +60,9 @@ export default function BatchProcessing() {
         title="Batch Processing"
         sub="Xử lý hàng loạt nhiều video giám sát cùng lúc từ hệ thống camera tự động."
       />
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
-        {/* Upload and Queue Column */}
-        <div className="space-y-6">
+      <div className="grid gap-6 lg:grid-cols-5">
+        {/* Upload and Queue Column (2/5) */}
+        <div className="space-y-6 lg:col-span-2">
           <Card title="Tải lên danh sách video">
             <DropZone
               multiple
@@ -137,8 +137,8 @@ export default function BatchProcessing() {
           </Card>
         </div>
 
-        {/* Progress & Live Results Column */}
-        <div className="space-y-6">
+        {/* Progress & Live Results Column (3/5) */}
+        <div className="space-y-6 lg:col-span-3">
           <Card
             title="Tiến trình hàng đợi"
             right={

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Activity, BarChart3, CheckCircle2, Clock, Cpu, History as HistoryIcon, Layers, Play, Radio, Shield, Video } from 'lucide-react';
+import logoImg from '../assets/logo.jpg';
 
 export const TABS = [
   ['analyze', 'Analyze Video', Video],
@@ -34,11 +35,13 @@ export default function Sidebar({ tab, setTab, videos }) {
 
   return (
     <aside className="hidden w-64 shrink-0 flex-col gap-5 border-r border-[#192652] bg-[#081028] p-4 text-white md:flex">
-      {/* Brand Header */}
+      {/* Brand Header with Custom AI Logo */}
       <div className="flex items-center gap-3 py-1">
-        <div className="grid size-11 place-items-center rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25">
-          <Video size={22} />
-        </div>
+        <img
+          src={logoImg}
+          alt="Behavior Detection Logo"
+          className="size-11 rounded-2xl object-cover shadow-lg shadow-cyan-500/20 border border-blue-400/30 shrink-0"
+        />
         <div className="leading-tight font-bold text-lg text-white">
           Behavior<br />Detection
         </div>

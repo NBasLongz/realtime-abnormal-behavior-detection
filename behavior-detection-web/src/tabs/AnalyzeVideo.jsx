@@ -161,10 +161,10 @@ export default function AnalyzeVideo({ onAnalyzed }) {
         </div>
       </div>
 
-      {/* Main Grid: 2 Columns */}
-      <div className="grid gap-6 xl:grid-cols-2">
-        {/* Left Column: Upload & Live Analysis */}
-        <div className="space-y-5">
+      {/* Main Grid: 2/5 Left, 3/5 Right */}
+      <div className="grid gap-6 lg:grid-cols-5">
+        {/* Left Column (2/5): Upload & Live Analysis */}
+        <div className="space-y-5 lg:col-span-2">
           {/* Upload Card */}
           <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs">
             <label className="group flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-blue-200 bg-blue-50/20 py-8 px-4 text-center transition-all hover:border-blue-400 hover:bg-blue-50/40">
@@ -287,8 +287,8 @@ export default function AnalyzeVideo({ onAnalyzed }) {
           </div>
         </div>
 
-        {/* Right Column: Analysis Results */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs space-y-5">
+        {/* Right Column (3/5): Analysis Results */}
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs space-y-5 lg:col-span-3">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-slate-100 pb-3">
             <h2 className="flex items-center gap-2 text-lg font-bold text-slate-900">
@@ -300,42 +300,50 @@ export default function AnalyzeVideo({ onAnalyzed }) {
             </span>
           </div>
 
-          {/* 4 Top Metric Cards */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {/* 4 Top Metric Cards (Compact Height) */}
+          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
             {/* Duration */}
-            <div className="rounded-xl border border-slate-200 bg-white p-3.5 shadow-xs">
-              <span className="grid size-8 place-items-center rounded-lg bg-sky-50 text-sky-600">
+            <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/90 bg-white px-3 py-2 shadow-xs">
+              <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-sky-50 text-sky-600">
                 <Clock size={16} />
               </span>
-              <div className="mt-2 text-xs font-medium text-slate-500">Duration</div>
-              <div className="mt-0.5 text-lg font-bold text-slate-900">{analysisResult.duration}</div>
+              <div className="min-w-0">
+                <div className="text-[11px] font-medium text-slate-500 leading-tight">Duration</div>
+                <div className="text-base font-bold text-slate-900 leading-none mt-0.5 truncate">{analysisResult.duration}</div>
+              </div>
             </div>
 
             {/* Resolution */}
-            <div className="rounded-xl border border-slate-200 bg-white p-3.5 shadow-xs">
-              <span className="grid size-8 place-items-center rounded-lg bg-purple-50 text-purple-600">
+            <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/90 bg-white px-3 py-2 shadow-xs">
+              <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-purple-50 text-purple-600">
                 <Monitor size={16} />
               </span>
-              <div className="mt-2 text-xs font-medium text-slate-500">Resolution</div>
-              <div className="mt-0.5 text-lg font-bold text-slate-900">{analysisResult.resolution}</div>
+              <div className="min-w-0">
+                <div className="text-[11px] font-medium text-slate-500 leading-tight">Resolution</div>
+                <div className="text-base font-bold text-slate-900 leading-none mt-0.5 truncate">{analysisResult.resolution}</div>
+              </div>
             </div>
 
             {/* FPS */}
-            <div className="rounded-xl border border-slate-200 bg-white p-3.5 shadow-xs">
-              <span className="grid size-8 place-items-center rounded-lg bg-emerald-50 text-emerald-600">
+            <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/90 bg-white px-3 py-2 shadow-xs">
+              <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-emerald-50 text-emerald-600">
                 <Gauge size={16} />
               </span>
-              <div className="mt-2 text-xs font-medium text-slate-500">FPS</div>
-              <div className="mt-0.5 text-lg font-bold text-slate-900">{analysisResult.fps}</div>
+              <div className="min-w-0">
+                <div className="text-[11px] font-medium text-slate-500 leading-tight">FPS</div>
+                <div className="text-base font-bold text-slate-900 leading-none mt-0.5 truncate">{analysisResult.fps}</div>
+              </div>
             </div>
 
             {/* Frames */}
-            <div className="rounded-xl border border-slate-200 bg-white p-3.5 shadow-xs">
-              <span className="grid size-8 place-items-center rounded-lg bg-pink-50 text-pink-600">
+            <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/90 bg-white px-3 py-2 shadow-xs">
+              <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-pink-50 text-pink-600">
                 <Layers size={16} />
               </span>
-              <div className="mt-2 text-xs font-medium text-slate-500">Frames</div>
-              <div className="mt-0.5 text-lg font-bold text-slate-900">{analysisResult.frames}</div>
+              <div className="min-w-0">
+                <div className="text-[11px] font-medium text-slate-500 leading-tight">Frames</div>
+                <div className="text-base font-bold text-slate-900 leading-none mt-0.5 truncate">{analysisResult.frames}</div>
+              </div>
             </div>
           </div>
 
