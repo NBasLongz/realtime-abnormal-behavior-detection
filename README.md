@@ -1,27 +1,31 @@
-#  Real-time Abnormal Behavior Detection System
+# Real-time Abnormal Behavior Detection System
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.9%2B-blue?logo=python&logoColor=white" alt="Python Version" />
   <img src="https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C?logo=pytorch&logoColor=white" alt="PyTorch Version" />
   <img src="https://img.shields.io/badge/YOLOv8-Pose-00FFFF?logo=ultralytics&logoColor=black" alt="YOLOv8 Pose" />
-  <img src="https://img.shields.io/badge/Streamlit-1.29%2B-FF4B4B?logo=streamlit&logoColor=white" alt="Streamlit" />
+  <img src="https://img.shields.io/badge/FastAPI-0.100%2B-009688?logo=fastapi&logoColor=white" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/React-18%2B-61DAFB?logo=react&logoColor=black" alt="React" />
+  <img src="https://img.shields.io/badge/Vite-5%2B-646CFF?logo=vite&logoColor=white" alt="Vite" />
   <img src="https://img.shields.io/badge/Status-Active-brightgreen" alt="Status" />
   <img src="https://img.shields.io/badge/License-MIT-yellow" alt="License" />
 </p>
 
-Hệ thống Camera giám sát thông minh nhận diện hành vi bất thường theo thời gian thực (Real-time). Dự án ứng dụng kiến trúc **Hybrid (Lai)** kết hợp **YOLOv8-Pose**, mạng nơ-ron sâu nhẹ **1D-CNN + BiLSTM + Attention** và thuật toán **Rule-based Spatio-Temporal** nhằm đạt tốc độ FPS cao, độ trễ thấp và bảo vệ quyền riêng tư người dùng.
+Hệ thống Camera giám sát thông minh nhận diện hành vi bất thường theo thời gian thực (Real-time). Dự án ứng dụng kiến trúc **Hybrid (Lai)** kết hợp **YOLOv8-Pose**, mạng nơ-ron sâu nhẹ **1D-CNN + BiLSTM + Attention** và thuật toán **Rule-based Spatio-Temporal** nhằm đạt tốc độ FPS cao, độ trễ thấp và bảo vệ quyền riêng tư người dùng. 
+
+Hệ thống hỗ trợ đầy đủ từ **Core AI suy luận thời gian thực**, **Backend API (FastAPI)** cho tới **Giao diện Web Dashboard hiện đại (React + Vite)** và ứng dụng Streamlit.
 
 ---
 
-##  Mục lục
+## Mục lục
 - [1. Tính năng nổi bật](#1-tính-năng-nổi-bật)
 - [2. Danh mục hành vi nhận diện](#2-danh-mục-hành-vi-nhận-diện)
 - [3. Kiến trúc hệ thống (Pipeline)](#3-kiến-trúc-hệ-thống-pipeline)
 - [4. Chi tiết mô hình AI (SkeletonLSTM)](#4-chi-tiết-mô-hình-ai-skeletonlstm)
 - [5. Cấu trúc thư mục dự án](#5-cấu-trúc-thư-mục-dự-án)
 - [6. Cài đặt môi trường](#6-cài-đặt-môi-trường)
-- [7. Chuẩn bị trọng số (Weights)](#7-chuẩn-bị-trọng-số-weights)
-- [8. Hướng dẫn khởi chạy](#8-hướng-dẫn-khởi-chạy)
+- [7. Tải trọng số & Dataset tự động](#7-tải-trọng-số--dataset-tự-động)
+- [8. Hướng dẫn khởi chạy hệ thống](#8-hướng-dẫn-khởi-chạy-hệ-thống)
 - [9. Huấn luyện lại mô hình (Training)](#9-huấn-luyện-lại-mô-hình-training)
 - [10. Cấu hình hệ thống (Settings)](#10-cấu-hình-hệ-thống-settings)
 - [11. Kế hoạch phát triển (Roadmap)](#11-kế-hoạch-phát-triển-roadmap)
@@ -31,14 +35,15 @@ Hệ thống Camera giám sát thông minh nhận diện hành vi bất thườn
 
 ## 1. Tính năng nổi bật
 
--  **Nhận diện Real-time (FPS cao):** Tối ưu hóa pipeline xử lý, chạy mượt mà trên GPU (CUDA) và hỗ trợ CPU.
--  **Multi-person Tracking:** Định danh đồng thời nhiều người trong khung hình thông qua thuật toán tracking BoT-SORT.
--  **Bảo vệ quyền riêng tư (Privacy-preserving):** Chỉ trích xuất và huấn luyện trên 17 điểm tọa độ khớp xương (Skeleton Keypoints), không lưu trữ và không phân tích khuôn mặt/đặc trưng ngoại hình.
--  **Cơ chế Hybrid thông minh:**
+- **Nhận diện Real-time (FPS cao):** Tối ưu hóa pipeline xử lý, chạy mượt mà trên GPU (CUDA) và hỗ trợ CPU.
+- **Multi-person Tracking:** Định danh đồng thời nhiều người trong khung hình thông qua thuật toán tracking BoT-SORT.
+- **Bảo vệ quyền riêng tư (Privacy-preserving):** Chỉ trích xuất và huấn luyện trên 17 điểm tọa độ khớp xương (Skeleton Keypoints), không lưu trữ và không phân tích khuôn mặt/đặc trưng ngoại hình.
+- **Cơ chế Hybrid thông minh:**
   - Hành vi động phức tạp (đánh nhau, té ngã) được suy luận qua mạng Deep Learning (BiLSTM).
   - Hành vi tĩnh/không gian (đứng chờ, lảng vảng) được xử lý bằng giải thuật Rule-based tính toán thời gian và dịch chuyển bounding box, tránh quá tải cho model AI.
--  **Trực quan hóa Dashboard:** Giao diện Web Streamlit hiện đại, cung cấp biểu đồ phân tích tần suất vi phạm, nhật ký sự kiện và xem lại video vi phạm.
--  **Lọc nhiễu dự đoán (Temporal Smoothing):** Áp dụng Majority Voting trên chuỗi các frame gần nhất, giảm tối đa hiện tượng nhấp nháy nhãn (flickering).
+- **Full-stack Web Dashboard (React + Vite):** Giao diện giám sát hiện đại, xem trực tiếp video phân tích, biểu đồ thống kê sự vụ, xử lý hàng loạt video (Batch Processing) và truy xuất lịch sử.
+- **FastAPI RESTful Backend:** API bất đồng bộ hiệu năng cao, tích hợp tài liệu tương tác Swagger UI (`/docs`).
+- **Lọc nhiễu dự đoán (Temporal Smoothing):** Áp dụng Majority Voting trên chuỗi các frame gần nhất, giảm tối đa hiện tượng nhấp nháy nhãn (flickering).
 
 ---
 
@@ -55,11 +60,11 @@ Hệ thống Camera giám sát thông minh nhận diện hành vi bất thườn
 
 ## 3. Kiến trúc hệ thống (Pipeline)
 
-Quy trình xử lý dữ liệu từ luồng video đầu vào đến kết quả cảnh báo:
+Quy trình xử lý dữ liệu từ luồng video đầu vào đến kết quả cảnh báo và giao diện:
 
 ```mermaid
 flowchart TD
-    A[Video Stream / Webcam] --> B[YOLOv8-Pose + BoT-SORT]
+    A[Video Stream / Webcam / File Upload] --> B[YOLOv8-Pose + BoT-SORT]
     B -->|BBox & Track ID| C[Track Manager]
     B -->|17 Keypoints x,y,conf| D[Pose Buffer Deque - seq_len=30]
     
@@ -83,8 +88,9 @@ flowchart TD
     end
 
     M --> N[Vẽ Skeleton & BBox lên Frame]
-    M --> O[(Ghi Log sự kiện CSV)]
-    O --> P[Streamlit Web Dashboard]
+    M --> O[Ghi nhận sự kiện & JSON Logs]
+    O --> P[FastAPI Backend / REST API]
+    P --> Q[React Vite Web Dashboard / Streamlit]
 ```
 
 ---
@@ -111,6 +117,16 @@ Mô hình [core/models/lstm_skeleton.py](file:///f:/Project/Abnormal_Behavior_De
 
 ```text
 Abnormal_Behavior_Detection_System/
+├── api/                             # FastAPI Backend Service
+│   ├── app.py                       # REST API (upload, analyze, history, batch)
+│   └── __init__.py
+├── behavior-detection-web/          # Modern Frontend (React + Vite)
+│   ├── src/
+│   │   ├── pages/                   # AdminApp, Analysis
+│   │   ├── tabs/                    # Dashboard, AnalyzeVideo, BatchProcessing, HistoryTab
+│   │   └── components/              # Sidebar, UI components
+│   ├── package.json
+│   └── vite.config.js
 ├── config/
 │   ├── settings.py                  # Cấu hình toàn cục (paths, model params, training)
 │   ├── model_config.yaml            # YAML cấu hình mô hình
@@ -128,27 +144,28 @@ Abnormal_Behavior_Detection_System/
 │       ├── dataset.py               # DataLoader & Kỹ thuật Augmentation
 │       └── evaluation.py            # Đánh giá mô hình (F1, Confusion Matrix)
 ├── web/
-│   ├── app.py                       # Streamlit Web Dashboard chính
-│   └── pages/
-│       └── analysis.py              # Trang phân tích thống kê chuyên sâu
+│   ├── app.py                       # Streamlit Dashboard (phương án giao diện phụ)
+│   └── pages/analysis.py
 ├── scripts/
 │   ├── data_processing/
+│   │   ├── download_datasets.py     # Tự động tải & phân loại Benchmark Datasets
+│   │   ├── download_weights.py      # Tự động tải Pre-trained YOLOv8 Weights
 │   │   └── build_sequences.py       # Trích xuất video raw thành dữ liệu .npy
 │   ├── training/
 │   │   └── train_model.py           # Huấn luyện mạng SkeletonLSTM
-│   └── deployment/                  # Batch scripts khởi chạy nhanh (.bat/.sh)
+│   └── deployment/                  # Batch & Shell scripts khởi chạy dịch vụ
 ├── weights/
-│   ├── detection/                   # Chứa yolov8s-pose.pt
+│   ├── detection/                   # Chứa yolov8s-pose.pt, yolov8s.pt
 │   └── classification/              # Chứa lstm_best.pth và checkpoints
 ├── data/
 │   ├── raw/                         # Video huấn luyện gốc (fighting, falling, normal)
-│   ├── processed/                   # Chuỗi sequence sau trích xuất
+│   ├── processed/                   # Chuỗi sequence .npy sau trích xuất
+│   ├── history.json                 # Lịch sử phân tích sự kiện
 │   └── logs/                        # File CSV lưu nhật ký sự kiện
-├── docker/                          # Cấu hình Docker & Docker Compose
-├── docs/                            # Tài liệu bổ sung
-├── requirements.txt                 # Danh sách thư viện phụ thuộc
-├── run_webcam_demo.py               # Kịch bản chạy nhận diện qua Webcam
-└── run_web.py                       # Kịch bản khởi động Dashboard
+├── start_system.bat                 # Script 1-Click khởi chạy toàn bộ hệ thống
+├── run_webcam_demo.py               # Kịch bản chạy nhận diện qua Webcam độc lập
+├── run_web.py                       # Kịch bản khởi động Streamlit Dashboard
+└── requirements.txt                 # Danh sách thư viện Python phụ thuộc
 ```
 
 ---
@@ -157,6 +174,7 @@ Abnormal_Behavior_Detection_System/
 
 ### Yêu cầu tiên quyết:
 - **Python**: Phiên bản `3.9` đến `3.11`.
+- **Node.js**: Phiên bản `18+` (dành cho Web Frontend React).
 - **Hệ điều hành**: Windows 10/11, Ubuntu 20.04+, hoặc macOS.
 - **Card đồ họa (Khuyến khích)**: NVIDIA GPU có cài CUDA 11.8 hoặc 12.x để đạt FPS tối đa.
 
@@ -168,7 +186,7 @@ Abnormal_Behavior_Detection_System/
    cd realtime-abnormal-behavior-detection
    ```
 
-2. **Tạo và kích hoạt môi trường ảo (Virtual Environment):**
+2. **Cài đặt môi trường Python:**
    - Trên **Windows**:
      ```powershell
      python -m venv venv
@@ -179,36 +197,77 @@ Abnormal_Behavior_Detection_System/
      python3 -m venv venv
      source venv/bin/activate
      ```
+   - Cài đặt thư viện:
+     ```bash
+     pip install --upgrade pip
+     pip install -r requirements.txt
+     pip install uvicorn fastapi python-multipart
+     ```
 
-3. **Cài đặt thư viện phụ thuộc:**
+3. **Cài đặt thư viện Frontend:**
    ```bash
-   pip install --upgrade pip
-   pip install -r requirements.txt
+   cd behavior-detection-web
+   npm install
+   cd ..
    ```
 
-   *(Tùy chọn: Nếu sử dụng GPU, hãy cài bản PyTorch tương thích CUDA từ [pytorch.org](https://pytorch.org/get-started/locally/)).*
+---
+
+## 7. Tải trọng số & Dataset tự động
+
+Dự án cung cấp sẵn 2 kịch bản tự động tải dữ liệu chuẩn về máy:
+
+### 1. Tải trọng số Detection (YOLOv8 & YOLOv8-Pose):
+```bash
+python scripts/data_processing/download_weights.py
+```
+Script sẽ tự động tải các file trọng số vào thư mục [weights/detection/](file:///f:/Project/Abnormal_Behavior_Detection_System/weights/detection).
+
+### 2. Tải Benchmark Dataset hành vi:
+```bash
+python scripts/data_processing/download_datasets.py
+```
+Script tự động thu thập và phân bổ đúng cấu trúc chuẩn vào `data/raw/`:
+- **`fighting` (147 videos)**: Trích xuất từ Real Life Violence Dataset.
+- **`normal` (130 videos)**: Trích xuất các hoạt động thường ngày không bạo lực.
+- **`falling` (108 videos)**: Trích xuất từ Multiple Cameras Fall Dataset (MCFD) qua đa góc quay.
 
 ---
 
-## 7. Chuẩn bị trọng số (Weights)
+## 8. Hướng dẫn khởi chạy hệ thống
 
-Trước khi chạy hệ thống, cần đặt các file trọng số vào thư mục `weights/`:
+### Cách 1: Khởi chạy 1-Click toàn bộ hệ thống (Khuyên dùng trên Windows)
 
-1. **YOLOv8-Pose Model:**
-   - Tải file trọng số `yolov8s-pose.pt` từ Ultralytics hoặc để code tự động tải khi chạy lần đầu.
-   - Vị trí đặt: `weights/detection/yolov8s-pose.pt`
+Nhấp đúp chuột vào file [start_system.bat](file:///f:/Project/Abnormal_Behavior_Detection_System/start_system.bat) hoặc chạy trong Terminal:
 
-2. **SkeletonLSTM Model:**
-   - Trọng số mô hình hành vi sau khi huấn luyện.
-   - Vị trí đặt: `weights/classification/lstm_best.pth`
+```cmd
+start_system.bat
+```
+
+Hệ thống sẽ đồng thời kích hoạt:
+- **FastAPI Backend:** Chạy tại `http://localhost:8000` (Tài liệu API Swagger: `http://localhost:8000/docs`).
+- **React Web Dashboard:** Chạy tại `http://localhost:3000` (hoặc `http://localhost:5173`).
 
 ---
 
-## 8. Hướng dẫn khởi chạy
+### Cách 2: Khởi chạy thủ công từng dịch vụ
 
-### Cách 1: Chạy demo nhận diện qua Webcam / Video
+**1. Khởi động API Server (FastAPI):**
+```bash
+python -m uvicorn api.app:app --host 0.0.0.0 --port 8000 --reload
+```
 
-Chạy trực tiếp pipeline nhận diện thời gian thực trên màn hình máy tính:
+**2. Khởi động Web Frontend (React + Vite):**
+```bash
+cd behavior-detection-web
+npm run dev
+```
+
+---
+
+### Cách 3: Chạy nhận diện trực tiếp bằng Webcam / Video (Không cần Web)
+
+Dành cho kiểm thử nhanh trực tiếp trên OpenCV:
 
 ```bash
 python run_webcam_demo.py
@@ -216,45 +275,30 @@ python run_webcam_demo.py
 
 *Phím tắt:* Bấm **`ESC`** trên cửa sổ video để dừng chương trình.
 
-Để nhận diện trên file video cụ thể, bạn có thể truyền đường dẫn file vào phương thức `recognize_from_video(source="duong_dan_video.mp4")` trong script.
+---
 
-### Cách 2: Khởi chạy Web Dashboard (Streamlit)
-
-Khởi động giao diện quản lý và phân tích sự kiện:
+### Cách 4: Khởi chạy giao diện phụ (Streamlit Dashboard)
 
 ```bash
 python run_web.py
 ```
-
-Ứng dụng sẽ tự động mở tại trình duyệt theo địa chỉ: `http://localhost:8501`.
+Truy cập tại địa chỉ: `http://localhost:8501`.
 
 ---
 
 ## 9. Huấn luyện lại mô hình (Training)
 
-Nếu bạn có tập dữ liệu video riêng và muốn huấn luyện lại mạng SkeletonLSTM:
+Nếu bạn muốn huấn luyện lại mạng SkeletonLSTM với dữ liệu mới:
 
 ### Bước 1: Chuẩn bị dữ liệu video
-Xếp các video theo cấu trúc thư mục sau trong `data/raw/`:
-```text
-data/raw/
-├── normal/
-│   ├── video_01.mp4
-│   └── ...
-├── fighting/
-│   ├── video_01.mp4
-│   └── ...
-└── falling/
-    ├── video_01.mp4
-    └── ...
-```
+Đặt các video vào `data/raw/` theo 3 thư mục: `normal/`, `fighting/`, `falling/` (hoặc chạy lệnh tải tự động ở mục 7).
 
 ### Bước 2: Trích xuất Pose Sequences
 Chạy script trích xuất khung xương và tạo tensor huấn luyện:
 ```bash
 python scripts/data_processing/build_sequences.py
 ```
-Dữ liệu chuẩn hóa sẽ được lưu vào `data/processed/sequences/`.
+Dữ liệu chuẩn hóa sẽ được lưu vào `data/processed/sequences/`. Script hỗ trợ các định dạng `.mp4`, `.avi`, `.mov`, `.mkv`.
 
 ### Bước 3: Huấn luyện mạng SkeletonLSTM
 Bắt đầu quá trình huấn luyện:
