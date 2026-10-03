@@ -49,6 +49,21 @@ def augment_skeleton(keypoints: np.ndarray) -> List[np.ndarray]:
 
     return variations
 
+def normalize_skeleton(seq: np.ndarray) -> np.ndarray:
+    """
+    Chuẩn hóa tọa độ khung xương về tâm cơ thể và tỉ lệ [-1, 1].
+    Giúp mô hình bất biến với vị trí người đứng và độ phân giải video.
+    """
+    res = seq.copy()
+    xy = res[:, :, :2]
+    center = np.mean(xy, axis=1, keepdims=True)
+    xy_centered = xy - center
+    scale = np.max(np.linalg.norm(xy_centered, axis=2))
+    if scale > 1e-4:
+        xy_centered = xy_centered / scale
+    res[:, :, :2] = xy_centered
+    return res
+
 def build_gcn_dataset(data_dir: Path):
     """
     Đọc dữ liệu LSTM cũ (.npy) và chuyển sang format CTR-GCN: [N, C, T, V]
@@ -71,7 +86,6 @@ def build_gcn_dataset(data_dir: Path):
                 
                 # Cắt/Padding thành đúng 30 frame
                 if seq.shape[0] < 30:
-                    # Pad bằng frame cuối
                     pad_length = 30 - seq.shape[0]
                     padding = np.repeat(seq[-1:], pad_length, axis=0)
                     seq = np.concatenate([seq, padding], axis=0)
@@ -79,6 +93,9 @@ def build_gcn_dataset(data_dir: Path):
                     seq = seq[:30, :, :] 
                 
                 total_original += 1
+                
+                # Chuẩn hóa tọa độ không gian (tâm cơ thể và scale)
+                seq = normalize_skeleton(seq)
                 
                 # Augment dữ liệu x4
                 augmented_seqs = augment_skeleton(seq)
