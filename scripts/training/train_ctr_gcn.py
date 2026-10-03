@@ -118,9 +118,8 @@ def main():
     try:
         torch.onnx.export(
             model, dummy_input, str(onnx_path), 
-            export_params=True, opset_version=12, 
-            input_names=['input'], output_names=['output'],
-            dynamic_axes={'input': {0: 'batch'}, 'output': {0: 'batch'}}
+            export_params=True, opset_version=18, 
+            input_names=['input'], output_names=['output']
         )
         print(f"Đã xuất ONNX thành công tại: {onnx_path}")
     except Exception as e:

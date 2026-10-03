@@ -51,16 +51,21 @@ def augment_skeleton(keypoints: np.ndarray) -> List[np.ndarray]:
 
 def normalize_skeleton(seq: np.ndarray) -> np.ndarray:
     """
-    Chuẩn hóa tọa độ khung xương về tâm cơ thể và tỉ lệ [-1, 1].
-    Giúp mô hình bất biến với vị trí người đứng và độ phân giải video.
+    Chuẩn hóa tọa độ khung xương:
+    Lấy tâm cơ thể ở frame đầu tiên làm gốc tọa độ (0, 0).
+    Nhờ vậy, toàn bộ chuyển động rơi ngã, đấm đá giữa các frame được BẢO TOÀN NGUYÊN VẸN!
     """
     res = seq.copy()
-    xy = res[:, :, :2]
-    center = np.mean(xy, axis=1, keepdims=True)
-    xy_centered = xy - center
-    scale = np.max(np.linalg.norm(xy_centered, axis=2))
+    xy = res[:, :, :2] # [T, 17, 2]
+    # Lấy tâm cơ thể ở frame đầu tiên (t=0) làm gốc tọa độ
+    center = np.mean(xy[0], axis=0, keepdims=True) # [1, 2]
+    xy_centered = xy - center # [T, 17, 2]
+    
+    # Scale theo kích thước cơ thể ở frame đầu tiên
+    scale = np.max(np.linalg.norm(xy[0] - center, axis=1))
     if scale > 1e-4:
         xy_centered = xy_centered / scale
+        
     res[:, :, :2] = xy_centered
     return res
 
