@@ -6,6 +6,8 @@ numpy>=1.24.3
 opencv-python>=4.8.1
 scikit-learn>=1.3.2
 ultralytics>=8.0.200
+onnx>=1.14.0
+onnxscript>=0.1.0
 
 # Backend API
 fastapi>=0.100.0
