@@ -20,7 +20,7 @@ class RealtimeBehaviorRecognizer:
         self,
         pose_weight: str,
         lstm_weight: str = "",
-        classes: List[str] = ["normal", "fighting", "falling"],
+        classes: List[str] = ["normal", "staggering", "falling"],
         device: str = "cuda",
         seq_len: int = 30,
         loitering_threshold_sec: float = 10.0,

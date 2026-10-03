@@ -19,8 +19,8 @@ def train():
     device = settings.device if torch.cuda.is_available() else "cpu"
     print(f"Using device: {device}")
 
-    # 3 target classes for skeleton-based abnormal behavior detection
-    target_classes = ["normal", "fighting", "falling"]
+    # 3 target classes for skeleton-based abnormal behavior detection (Healthcare domain)
+    target_classes = ["normal", "staggering", "falling"]
 
     # --------------------------
     # DATASET

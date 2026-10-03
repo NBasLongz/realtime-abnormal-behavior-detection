@@ -170,7 +170,7 @@ def download_direct_video(url: str, output_file: Path) -> bool:
         return False
 
 def download_fighting_and_normal(target_dir: Path, n_fight: int = 147, n_normal: int = 130, max_workers: int = 6):
-    fight_dir = target_dir / "fighting"
+    fight_dir = target_dir / "staggering"
     normal_dir = target_dir / "normal"
     fight_dir.mkdir(parents=True, exist_ok=True)
     normal_dir.mkdir(parents=True, exist_ok=True)
@@ -187,12 +187,12 @@ def download_fighting_and_normal(target_dir: Path, n_fight: int = 147, n_normal:
     print(f"  -> Found {len(v_entries)} violence videos, selected {len(v_selected)}")
     print(f"  -> Found {len(nv_entries)} non-violence videos, selected {len(nv_selected)}")
 
-    # Download fighting
-    print(f"\n[2/3] Downloading FIGHTING dataset ({len(v_selected)} videos)...")
+    # Download staggering (using violence videos as a placeholder for testing)
+    print(f"\n[2/3] Downloading STAGGERING placeholder dataset ({len(v_selected)} videos)...")
     tasks = []
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         for idx, entry in enumerate(v_selected, 1):
-            out_file = fight_dir / f"fight_{idx:03d}.mp4"
+            out_file = fight_dir / f"stagger_{idx:03d}.mp4"
             tasks.append(executor.submit(download_zip_entry, HF_VIOLENCE_ZIP_URL, entry, out_file))
 
         success_fight = 0
@@ -276,15 +276,15 @@ def main():
     download_falling(raw_dir, n_fall=args.num_fall, max_workers=args.max_workers)
 
     # Final Summary
-    fight_count = len(list((raw_dir / "fighting").glob("*.*")))
+    fight_count = len(list((raw_dir / "staggering").glob("*.*")))
     normal_count = len(list((raw_dir / "normal").glob("*.*")))
     fall_count = len(list((raw_dir / "falling").glob("*.*")))
 
     print("\n" + "=" * 60)
     print("DATASET ACQUISITION SUMMARY:")
-    print(f"  - Fighting (Bạo lực / Đánh nhau):  {fight_count} videos in {raw_dir / 'fighting'}")
-    print(f"  - Normal   (Sinh hoạt bình thường): {normal_count} videos in {raw_dir / 'normal'}")
-    print(f"  - Falling  (Té ngã / Tai nạn):      {fall_count} videos in {raw_dir / 'falling'}")
+    print(f"  - Staggering (Lảo đảo / Tiền đột quỵ):  {fight_count} videos in {raw_dir / 'staggering'}")
+    print(f"  - Normal     (Sinh hoạt bình thường): {normal_count} videos in {raw_dir / 'normal'}")
+    print(f"  - Falling    (Té ngã / Tai nạn):      {fall_count} videos in {raw_dir / 'falling'}")
     print(f"  Total: {fight_count + normal_count + fall_count} videos ready for Pose Sequence Extraction!")
     print("=" * 60)
 

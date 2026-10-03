@@ -9,9 +9,9 @@ from sklearn.metrics import (
 
 class Evaluator:
     @staticmethod
-    def evaluate(y_true, y_pred, target_names=["Normal", "Fighting", "Falling"]):
+    def evaluate(y_true, y_pred, target_names=["Normal", "Staggering", "Falling"]):
         """
-        Đánh giá chuyên sâu 3 lớp (chuẩn CS406).
+        Đánh giá chuyên sâu 3 lớp (Y tế).
         Không chỉ báo cáo 1 chỉ số, mà bóc tách từng class để thấy rõ F1-score của lớp thiểu số.
         """
         # Overall Accuracy

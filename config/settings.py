@@ -88,7 +88,7 @@ class Settings:
         self.api = APIConfig()
         
         if self.classes is None:
-            self.classes = ["normal", "fighting", "falling", "loitering"]
+            self.classes = ["normal", "staggering", "falling", "loitering"]
         
         # Create directories
         self.data_dir.mkdir(exist_ok=True)

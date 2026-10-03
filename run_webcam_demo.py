@@ -16,7 +16,7 @@ def main():
             pose_weight=str(settings.model.pose_weight),
             lstm_weight=str(settings.model.lstm_weight),
             # <-- ĐÃ FIX: Chỉ truyền đúng 3 class để model không bị "ngáo"
-            classes=["normal", "fighting", "falling"], 
+            classes=["normal", "staggering", "falling"], 
             device=settings.device,
             seq_len=settings.model.seq_len,
             loitering_threshold_sec=10.0
