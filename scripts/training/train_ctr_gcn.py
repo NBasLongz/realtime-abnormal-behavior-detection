@@ -23,21 +23,30 @@ def main():
     print(f"Thiết bị huấn luyện: {device}")
 
     data_dir = PROJECT_ROOT / "data"/ "processed"/ "gcn"
-    x_path = data_dir / "gcn_train_x.npy"
-    y_path = data_dir / "gcn_train_y.npy"
+    x_train_path = data_dir / "gcn_train_x.npy"
+    y_train_path = data_dir / "gcn_train_y.npy"
+    x_test_path = data_dir / "gcn_test_x.npy"
+    y_test_path = data_dir / "gcn_test_y.npy"
 
-    if not x_path.exists() or not y_path.exists():
+    if not x_train_path.exists() or not y_train_path.exists():
         print(f"Không tìm thấy data tại {data_dir}. Vui lòng chạy export_gcn_dataset.py trước.")
         return
 
-    # Load Data
-    X = np.load(str(x_path))
-    Y = np.load(str(y_path))
-    print(f"Dữ liệu đã tải: X={X.shape}, Y={Y.shape}")
-
-    # Chia tập Train/Test (80-20) để có tập Test cố định phục vụ đánh giá (Evaluation)
-    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=42, stratify=Y)
+    # Load Data với bảo đảm Zero Data Leakage
+    if x_test_path.exists() and y_test_path.exists():
+        print("Sử dụng tập Train/Test đã chia độc lập theo kịch bản (Zero Data Leakage)...")
+        X_train = np.load(str(x_train_path))
+        y_train = np.load(str(y_train_path))
+        X_test = np.load(str(x_test_path))
+        y_test = np.load(str(y_test_path))
+    else:
+        X = np.load(str(x_train_path))
+        Y = np.load(str(y_train_path))
+        X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=42, stratify=Y)
     
+    print(f"Dữ liệu huấn luyện: X_train={X_train.shape}, Y_train={y_train.shape}")
+    print(f"Dữ liệu kiểm thử:    X_test={X_test.shape}, Y_test={y_test.shape}")
+
     train_loader = DataLoader(TensorDataset(torch.tensor(X_train).to(device), torch.tensor(y_train).to(device)), batch_size=32, shuffle=True)
     test_loader = DataLoader(TensorDataset(torch.tensor(X_test).to(device), torch.tensor(y_test).to(device)), batch_size=32, shuffle=False)
 
