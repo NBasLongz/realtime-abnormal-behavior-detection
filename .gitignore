@@ -27,6 +27,7 @@ data/logs/**/*
 *.flv
 *.npy
 *.npz
+*.zip
 
 # Python
 __pycache__/
