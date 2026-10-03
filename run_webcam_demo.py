@@ -8,7 +8,7 @@ from core.inference.pipeline import RealtimeBehaviorRecognizer
 
 def main():
     print("="*50)
-    print("🚀 KÍCH HOẠT HỆ THỐNG CAMERA GIÁM SÁT REAL-TIME")
+    print("KÍCH HOẠT HỆ THỐNG CAMERA GIÁM SÁT REAL-TIME")
     print("="*50)
 
     try:
@@ -21,12 +21,12 @@ def main():
             seq_len=settings.model.seq_len,
             loitering_threshold_sec=10.0
         )
-        print("✅ Đã khởi tạo AI thành công!")
+        print("Đã khởi tạo AI thành công!")
     except Exception as e:
-        print(f"❌ Lỗi khởi tạo hệ thống: {e}")
+        print(f"Lỗi khởi tạo hệ thống: {e}")
         return
 
-    print("\n🎥 Đang mở Camera... (Bấm phím ESC trên cửa sổ video để tắt)")
+    print("\n Đang mở Camera... (Bấm phím ESC trên cửa sổ video để tắt)")
     recognizer.recognize_from_video(source=0, display=True)
 
 if __name__ == "__main__":

@@ -36,20 +36,20 @@ class CTRGCN(nn.Module):
         print(f"Đang tải pretrained weights từ: {weight_path}")
         try:
             state_dict = torch.load(weight_path, map_location=device)
-            # Nếu file weights có bọc trong key 'state_dict' (chuẩn của mmcv/mmaction)
-            if 'state_dict' in state_dict:
+            # Nếu file weights có bọc trong key 'state_dict'(chuẩn của mmcv/mmaction)
+            if 'state_dict'in state_dict:
                 state_dict = state_dict['state_dict']
 
             # Lọc bỏ lớp classification cuối (vì nó là 120 class, không khớp 3 class)
-            filtered_dict = {k: v for k, v in state_dict.items() if 'fc' not in k}
+            filtered_dict = {k: v for k, v in state_dict.items() if 'fc'not in k}
             
             # Nạp vào model hiện tại
             missing_keys, unexpected_keys = self.load_state_dict(filtered_dict, strict=False)
-            print("✅ Đã load thành công kiến thức cơ thể người (Transfer Learning)!")
-            print(f"⚠️ Các lớp được giữ lại để học mới: {missing_keys}")
+            print("Đã load thành công kiến thức cơ thể người (Transfer Learning)!")
+            print(f"Các lớp được giữ lại để học mới: {missing_keys}")
             
         except Exception as e:
-            print(f"❌ Lỗi khi load weights: {e}")
+            print(f"Lỗi khi load weights: {e}")
 
     def forward(self, x):
         """

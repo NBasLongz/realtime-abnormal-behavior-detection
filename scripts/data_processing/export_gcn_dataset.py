@@ -94,21 +94,21 @@ def build_gcn_dataset(data_dir: Path):
                 print(f"Lỗi đọc file {npy_file}: {e}")
                 
     if not gcn_data:
-        print("❌ Không tìm thấy dữ liệu gốc để chuyển đổi!")
+        print("Không tìm thấy dữ liệu gốc để chuyển đổi!")
         return None, None
         
     final_x = np.array(gcn_data, dtype=np.float32)
     final_y = np.array(labels, dtype=np.int64)
     
-    print(f"✅ Đã chuẩn bị dữ liệu GCN: X={final_x.shape}, Y={final_y.shape}")
-    print(f"   Dữ liệu gốc: {total_original} sequences")
-    print(f"   Sau khi Augment (x4): {total_augmented} sequences")
+    print(f"Đã chuẩn bị dữ liệu GCN: X={final_x.shape}, Y={final_y.shape}")
+    print(f"Dữ liệu gốc: {total_original} sequences")
+    print(f"Sau khi Augment (x4): {total_augmented} sequences")
     return final_x, final_y
 
 if __name__ == "__main__":
     # Đã đổi thành đường dẫn động (Dynamic Paths) theo cấu hình của dự án
-    data_in_dir = settings.data_dir / "processed" / "sequences"
-    data_out_dir = settings.data_dir / "processed" / "gcn"
+    data_in_dir = settings.data_dir / "processed"/ "sequences"
+    data_out_dir = settings.data_dir / "processed"/ "gcn"
     data_out_dir.mkdir(parents=True, exist_ok=True)
     
     print(f"⏳ Đang đọc dữ liệu từ: {data_in_dir}")
@@ -121,4 +121,4 @@ if __name__ == "__main__":
         out_y_path = data_out_dir / 'gcn_train_y.npy'
         np.save(str(out_x_path), x)
         np.save(str(out_y_path), y)
-        print(f"🎉 Hoàn thành! File được lưu tại: {data_out_dir}")
+        print(f"Hoàn thành! File được lưu tại: {data_out_dir}")

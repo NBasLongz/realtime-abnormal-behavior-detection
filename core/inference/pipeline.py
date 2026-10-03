@@ -46,9 +46,9 @@ class RealtimeBehaviorRecognizer:
         
         try:
             self.model.load_state_dict(torch.load(lstm_weight, map_location=self.device, weights_only=False))
-            print(f"✅ Loaded LSTM weights from {lstm_weight}")
+            print(f"Loaded LSTM weights from {lstm_weight}")
         except Exception as e:
-            print(f"❌ Failed to load LSTM weights: {e}")
+            print(f"Failed to load LSTM weights: {e}")
             
         self.model.eval()
 
@@ -57,7 +57,7 @@ class RealtimeBehaviorRecognizer:
         self.track_recent_preds = defaultdict(lambda: deque(maxlen=7))
 
     def _setup_logger(self):
-        log_file = settings.data_dir / "logs" / f"realtime_log_{datetime.now().strftime('%Y%m%d')}.csv"
+        log_file = settings.data_dir / "logs"/ f"realtime_log_{datetime.now().strftime('%Y%m%d')}.csv"
         if not log_file.exists():
             with open(log_file, mode='w', newline='') as f:
                 csv.writer(f).writerow(["Timestamp", "Track_ID", "Behavior", "Confidence"])

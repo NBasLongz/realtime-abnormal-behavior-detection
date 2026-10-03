@@ -50,8 +50,8 @@ class Evaluator:
 
     @staticmethod
     def print_report(eval_results):
-        print("\n" + "="*50)
-        print("📊 CLASSIFICATION EVALUATION REPORT")
+        print("\n"+ "="*50)
+        print("CLASSIFICATION EVALUATION REPORT")
         print("="*50)
         print(f"Overall Accuracy: {eval_results['accuracy'] * 100:.2f}%")
         print(f"Macro F1-Score:   {eval_results['macro_f1'] * 100:.2f}%\n")

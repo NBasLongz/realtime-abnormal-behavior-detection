@@ -16,23 +16,23 @@ from core.models.ctr_gcn import CTRGCN
 from core.training.evaluation import Evaluator
 
 def main():
-    print("🚀 Bắt đầu quá trình Transfer Learning cho CTR-GCN...")
+    print("Bắt đầu quá trình Transfer Learning cho CTR-GCN...")
     
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print(f"🖥️ Thiết bị huấn luyện: {device}")
+    device = torch.device('cuda'if torch.cuda.is_available() else 'cpu')
+    print(f"Thiết bị huấn luyện: {device}")
 
-    data_dir = PROJECT_ROOT / "data" / "processed" / "gcn"
+    data_dir = PROJECT_ROOT / "data"/ "processed"/ "gcn"
     x_path = data_dir / "gcn_train_x.npy"
     y_path = data_dir / "gcn_train_y.npy"
 
     if not x_path.exists() or not y_path.exists():
-        print(f"❌ Không tìm thấy data tại {data_dir}. Vui lòng chạy export_gcn_dataset.py trước.")
+        print(f"Không tìm thấy data tại {data_dir}. Vui lòng chạy export_gcn_dataset.py trước.")
         return
 
     # Load Data
     X = np.load(str(x_path))
     Y = np.load(str(y_path))
-    print(f"📦 Dữ liệu đã tải: X={X.shape}, Y={Y.shape}")
+    print(f"Dữ liệu đã tải: X={X.shape}, Y={Y.shape}")
 
     # Chia tập Train/Test (80-20) để có tập Test cố định phục vụ đánh giá (Evaluation)
     X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=42, stratify=Y)
@@ -44,11 +44,11 @@ def main():
     model = CTRGCN(num_classes=3).to(device)
     
     # Load Pretrained Weights (Giả sử bạn đã chạy file tải weights về thư mục này)
-    weights_path = PROJECT_ROOT / "weights" / "classification" / "ctrgcn_ntu_120.pt"
+    weights_path = PROJECT_ROOT / "weights"/ "classification"/ "ctrgcn_ntu_120.pt"
     if weights_path.exists():
         model.load_pretrained_weights(str(weights_path), device=str(device))
     else:
-        print(f"⚠️ CẢNH BÁO: Không tìm thấy pretrained weights tại {weights_path}. Sẽ train từ đầu (Từ chối Transfer Learning).")
+        print(f"CẢNH BÁO: Không tìm thấy pretrained weights tại {weights_path}. Sẽ train từ đầu (Từ chối Transfer Learning).")
 
     # Chỉ định Optimizer & Loss Function
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
@@ -57,7 +57,7 @@ def main():
     # Vòng lặp huấn luyện (Training Loop)
     epochs = 30
     best_f1 = 0.0
-    best_model_path = PROJECT_ROOT / "weights" / "classification" / "ctrgcn_best.pt"
+    best_model_path = PROJECT_ROOT / "weights"/ "classification"/ "ctrgcn_best.pt"
     best_model_path.parent.mkdir(parents=True, exist_ok=True)
 
     for epoch in range(1, epochs + 1):
@@ -92,9 +92,9 @@ def main():
         if val_f1 > best_f1:
             best_f1 = val_f1
             torch.save(model.state_dict(), str(best_model_path))
-            print(f"   🌟 Đã lưu mô hình tốt nhất đạt Macro-F1: {best_f1:.4f}")
+            print(f"Đã lưu mô hình tốt nhất đạt Macro-F1: {best_f1:.4f}")
 
-    print("\n✅ HOÀN TẤT HUẤN LUYỆN! BÁO CÁO KẾT QUẢ TỐT NHẤT:")
+    print("\n HOÀN TẤT HUẤN LUYỆN! BÁO CÁO KẾT QUẢ TỐT NHẤT:")
     # Tải lại model tốt nhất và in báo cáo chuẩn
     model.load_state_dict(torch.load(str(best_model_path)))
     model.eval()
@@ -116,7 +116,7 @@ def main():
     torch.onnx.export(model, dummy_input, str(onnx_path), 
                       export_params=True, opset_version=12, 
                       input_names=['input'], output_names=['output'])
-    print(f"🎉 Đã xuất ONNX thành công tại: {onnx_path}")
+    print(f"Đã xuất ONNX thành công tại: {onnx_path}")
 
 if __name__ == "__main__":
     main()

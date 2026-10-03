@@ -11,11 +11,11 @@ if str(PROJECT_ROOT) not in sys.path:
 from core.models.ctr_gcn import CTRGCN
 
 def main():
-    model_path = PROJECT_ROOT / "weights" / "classification" / "ctrgcn_best.pt"
-    onnx_path = PROJECT_ROOT / "weights" / "classification" / "ctrgcn_best.onnx"
+    model_path = PROJECT_ROOT / "weights"/ "classification"/ "ctrgcn_best.pt"
+    onnx_path = PROJECT_ROOT / "weights"/ "classification"/ "ctrgcn_best.onnx"
     
     if not model_path.exists():
-        print(f"❌ Không tìm thấy model checkpoint tại: {model_path}")
+        print(f"Không tìm thấy model checkpoint tại: {model_path}")
         return
 
     device = torch.device('cpu')
@@ -37,9 +37,9 @@ def main():
             output_names=['output'],
             dynamic_axes={'input': {0: 'batch'}, 'output': {0: 'batch'}}
         )
-        print(f"🎉 Xuất ONNX thành công tại: {onnx_path}")
+        print(f"Xuất ONNX thành công tại: {onnx_path}")
     except Exception as e:
-        print(f"⚠️ Thử chế độ fallback export: {e}")
+        print(f"Thử chế độ fallback export: {e}")
         torch.onnx.export(
             model,
             dummy_input,
@@ -49,7 +49,7 @@ def main():
             input_names=['input'],
             output_names=['output']
         )
-        print(f"🎉 Xuất ONNX fallback thành công tại: {onnx_path}")
+        print(f"Xuất ONNX fallback thành công tại: {onnx_path}")
 
 if __name__ == "__main__":
     main()

@@ -21,13 +21,13 @@ class DownloadProgressBar(tqdm):
 
 def download_file(url: str, output_path: Path):
     if output_path.exists() and output_path.stat().st_size > 1024*1024:
-        print(f"  ✓ {output_path.name} already exists ({round(output_path.stat().st_size / 1024**2, 2)} MB). Skipping.")
+        print(f"{output_path.name} already exists ({round(output_path.stat().st_size / 1024**2, 2)} MB). Skipping.")
         return True
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     temp_path = output_path.with_suffix(".tmp")
 
-    print(f"  Downloading {output_path.name} from {url}...")
+    print(f"Downloading {output_path.name} from {url}...")
     try:
         with DownloadProgressBar(unit='B', unit_scale=True, miniters=1, desc=output_path.name) as t:
             urllib.request.urlretrieve(url, filename=temp_path, reporthook=t.update_to)
@@ -36,14 +36,14 @@ def download_file(url: str, output_path: Path):
             if output_path.exists():
                 output_path.unlink()
             temp_path.rename(output_path)
-            print(f"  ✅ Successfully saved {output_path.name}")
+            print(f"Successfully saved {output_path.name}")
             return True
         else:
             if temp_path.exists():
                 temp_path.unlink()
             return False
     except Exception as e:
-        print(f"  ❌ Error downloading {output_path.name}: {e}")
+        print(f"Error downloading {output_path.name}: {e}")
         if temp_path.exists():
             temp_path.unlink()
         return False
@@ -52,15 +52,15 @@ def main():
     detection_dir = settings.weights_dir / "detection"
     detection_dir.mkdir(parents=True, exist_ok=True)
 
-    print("=" * 60)
+    print("="* 60)
     print("DOWNLOADING PRE-TRAINED DETECTION WEIGHTS")
-    print("=" * 60)
+    print("="* 60)
 
     for filename, url in MODELS.items():
         dest = detection_dir / filename
         download_file(url, dest)
 
-    print("\n✅ Weight download process finished.")
+    print("\n Weight download process finished.")
 
 if __name__ == "__main__":
     main()

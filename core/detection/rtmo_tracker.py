@@ -72,10 +72,10 @@ class RTMOPoseTracker:
             raise ImportError("Vui lòng cài đặt onnxruntime: pip install onnxruntime")
             
         if not os.path.exists(onnx_model_path):
-            print(f"⚠️ Chưa có file RTMO ONNX tại: {onnx_model_path}")
+            print(f"Chưa có file RTMO ONNX tại: {onnx_model_path}")
             self.session = None
         else:
-            providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if device == 'cuda' else ['CPUExecutionProvider']
+            providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if device == 'cuda'else ['CPUExecutionProvider']
             self.session = ort.InferenceSession(onnx_model_path, providers=providers)
             self.input_name = self.session.get_inputs()[0].name
             # input shape RTMO thường là [1, 3, 640, 640]
