@@ -20,7 +20,7 @@ def train():
     print(f"Using device: {device}")
 
     # 3 target classes for skeleton-based abnormal behavior detection (Healthcare domain)
-    target_classes = ["normal", "staggering", "falling"]
+    target_classes = [c for c in settings.classes if c != "loitering"]
 
     # --------------------------
     # DATASET
@@ -110,9 +110,9 @@ def train():
                 all_preds.extend(preds.cpu().numpy())
                 all_targets.extend(y.cpu().numpy())
 
-        metrics = Evaluator.evaluate(all_targets, all_preds)
+        metrics = Evaluator.evaluate(all_targets, all_preds, target_names=[c.capitalize() for c in target_classes])
         val_acc = metrics["accuracy"]
-        val_f1 = metrics["f1"]
+        val_f1 = metrics["macro_f1"]
 
         scheduler.step(val_acc)
         current_lr = optimizer.param_groups[0]["lr"]

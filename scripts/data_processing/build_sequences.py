@@ -58,8 +58,8 @@ def build_sequences_for_video(video_path: Path, save_dir: Path, tracker: PoseTra
 
 def main():
     root_raw = settings.data_dir / "raw"
-    # CHỈ BUILD SEQUENCE CHO 3 CLASS NÀY:
-    target_classes = ["normal", "fighting", "falling"]
+    # CHỈ BUILD SEQUENCE CHO 3 CLASS HỌC SÂU (BỎ LOITERING):
+    target_classes = [c for c in settings.classes if c != "loitering"]
     
     tracker = PoseTracker(
         str(settings.weights_dir / "detection/yolov8s-pose.pt"),
@@ -72,6 +72,9 @@ def main():
 
     for cls in target_classes:
         class_dir = root_raw / cls
+        if not class_dir.exists() and cls == "staggering" and (root_raw / "fighting").exists():
+            print(f"  [Lưu ý] Không tìm thấy raw/{cls}, tự động đọc dữ liệu từ raw/fighting...")
+            class_dir = root_raw / "fighting"
         if not class_dir.exists(): continue
 
         out_dir = settings.data_dir / "processed" / "sequences" / cls

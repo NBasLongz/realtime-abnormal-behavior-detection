@@ -26,6 +26,8 @@ class SkeletonDataset(Dataset):
         video_groups = defaultdict(list)
         for cls in classes:
             class_dir = self.root_dir / cls
+            if not class_dir.exists() and cls == "staggering" and (self.root_dir / "fighting").exists():
+                class_dir = self.root_dir / "fighting"
             if not class_dir.exists(): continue
             for f in class_dir.glob("*.npy"):
                 video_name = f.stem.rsplit("_id", 1)[0]

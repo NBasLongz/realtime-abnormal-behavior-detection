@@ -14,6 +14,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from core.models.ctr_gcn import CTRGCN
 from core.training.evaluation import Evaluator
+from config.settings import settings
 
 def main():
     print("Bắt đầu quá trình Transfer Learning cho CTR-GCN...")
@@ -108,7 +109,8 @@ def main():
             all_preds.extend(torch.argmax(out, dim=1).cpu().numpy())
             all_trues.extend(batch_y.cpu().numpy())
     
-    final_eval = Evaluator.evaluate(all_trues, all_preds)
+    target_names = [c.capitalize() for c in settings.classes if c != "loitering"]
+    final_eval = Evaluator.evaluate(all_trues, all_preds, target_names=target_names)
     Evaluator.print_report(final_eval)
 
     # Xuất ra định dạng ONNX

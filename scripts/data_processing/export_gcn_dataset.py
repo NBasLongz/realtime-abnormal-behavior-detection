@@ -73,7 +73,7 @@ def build_gcn_dataset(data_dir: Path):
     """
     Đọc dữ liệu LSTM cũ (.npy) và chuyển sang format CTR-GCN: [N, C, T, V]
     """
-    classes = ["normal", "fighting", "falling"]
+    classes = [c for c in settings.classes if c != "loitering"]
     gcn_data = []
     labels = []
     total_original = 0
@@ -81,6 +81,9 @@ def build_gcn_dataset(data_dir: Path):
     
     for cls_idx, cls_name in enumerate(classes):
         cls_dir = data_dir / cls_name
+        if not cls_dir.exists() and cls_name == "staggering" and (data_dir / "fighting").exists():
+            print(f"  [Lưu ý] Không tìm thấy sequences/{cls_name}, tự động đọc dữ liệu từ sequences/fighting...")
+            cls_dir = data_dir / "fighting"
         if not cls_dir.exists():
             continue
             
