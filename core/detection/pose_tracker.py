@@ -22,7 +22,7 @@ class PoseTracker:
             classes=[0],        # Chỉ tracking người
             persist=True,       # Bắt buộc để giữ ID giữa các frame
             verbose=False,
-            tracker="botsort.yaml" # Dùng BoT-SORT ổn định hơn DeepSORT
+            tracker="bytetrack.yaml" # Dùng ByteTrack nhẹ và không bị lỗi OpenCV GMC như BoT-SORT
         )[0]
 
         persons = []
