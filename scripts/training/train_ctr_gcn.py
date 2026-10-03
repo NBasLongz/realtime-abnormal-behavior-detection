@@ -16,48 +16,48 @@ from core.models.ctr_gcn import CTRGCN
 from core.training.evaluation import Evaluator
 
 def main():
-    print("Bắt đầu quá trình Transfer Learning cho CTR-GCN...")
+    print("Bat dau qua trinh huan luyen cho CTR-GCN...")
     
-    device = torch.device('cuda'if torch.cuda.is_available() else 'cpu')
-    print(f"Thiết bị huấn luyện: {device}")
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    print(f"Thiet bi huan luyen: {device}")
 
-    data_dir = PROJECT_ROOT / "data"/ "processed"/ "gcn"
+    data_dir = PROJECT_ROOT / "data" / "processed" / "gcn"
     x_path = data_dir / "gcn_train_x.npy"
     y_path = data_dir / "gcn_train_y.npy"
 
     if not x_path.exists() or not y_path.exists():
-        print(f"Không tìm thấy data tại {data_dir}. Vui lòng chạy export_gcn_dataset.py trước.")
+        print(f"Loi: Khong tim thay data tai {data_dir}. Vui long chay export_gcn_dataset.py truoc.")
         return
 
     # Load Data
     X = np.load(str(x_path))
     Y = np.load(str(y_path))
-    print(f"Dữ liệu đã tải: X={X.shape}, Y={Y.shape}")
+    print(f"Du lieu da tai: X={X.shape}, Y={Y.shape}")
 
-    # Chia tập Train/Test (80-20) để có tập Test cố định phục vụ đánh giá (Evaluation)
+    # Chia tap Train/Test (80-20) co stratify
     X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=42, stratify=Y)
     
     train_loader = DataLoader(TensorDataset(torch.tensor(X_train).to(device), torch.tensor(y_train).to(device)), batch_size=32, shuffle=True)
     test_loader = DataLoader(TensorDataset(torch.tensor(X_test).to(device), torch.tensor(y_test).to(device)), batch_size=32, shuffle=False)
 
-    # Khởi tạo mô hình
+    # Khoi tao mo hinh
     model = CTRGCN(num_classes=3).to(device)
     
-    # Load Pretrained Weights (Giả sử bạn đã chạy file tải weights về thư mục này)
-    weights_path = PROJECT_ROOT / "weights"/ "classification"/ "ctrgcn_ntu_120.pt"
+    # Load Pretrained Weights neu co
+    weights_path = PROJECT_ROOT / "weights" / "classification" / "ctrgcn_ntu_120.pt"
     if weights_path.exists():
         model.load_pretrained_weights(str(weights_path), device=str(device))
     else:
-        print(f"CẢNH BÁO: Không tìm thấy pretrained weights tại {weights_path}. Sẽ train từ đầu (Từ chối Transfer Learning).")
+        print(f"CANH BAO: Khong tim thay pretrained weights tai {weights_path}. Se huan luyen tu dau (From Scratch).")
 
-    # Chỉ định Optimizer & Loss Function
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    # Optimizer AdamW voi weight decay + CosineAnnealingLR scheduler
+    epochs = 40
+    optimizer = torch.optim.AdamW(model.parameters(), lr=0.001, weight_decay=1e-4)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs, eta_min=1e-5)
     criterion = nn.CrossEntropyLoss()
 
-    # Vòng lặp huấn luyện (Training Loop)
-    epochs = 30
     best_f1 = 0.0
-    best_model_path = PROJECT_ROOT / "weights"/ "classification"/ "ctrgcn_best.pt"
+    best_model_path = PROJECT_ROOT / "weights" / "classification" / "ctrgcn_best.pt"
     best_model_path.parent.mkdir(parents=True, exist_ok=True)
 
     for epoch in range(1, epochs + 1):
@@ -68,10 +68,13 @@ def main():
             preds = model(batch_x)
             loss = criterion(preds, batch_y)
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             optimizer.step()
             total_loss += loss.item()
         
-        # Đánh giá (Evaluation) trên tập Test sau mỗi Epoch
+        scheduler.step()
+        
+        # Danh gia tren tap Test sau moi Epoch
         model.eval()
         all_preds = []
         all_trues = []
@@ -82,21 +85,19 @@ def main():
                 all_preds.extend(preds.cpu().numpy())
                 all_trues.extend(batch_y.cpu().numpy())
         
-        # Dùng bộ Evaluator chuẩn hóa
         eval_results = Evaluator.evaluate(all_trues, all_preds)
         val_f1 = eval_results['macro_f1']
+        current_lr = scheduler.get_last_lr()[0]
         
-        print(f"Epoch {epoch}/{epochs} | Loss: {total_loss/len(train_loader):.4f} | Val Accuracy: {eval_results['accuracy']:.4f} | Val Macro-F1: {val_f1:.4f}")
+        print(f"Epoch {epoch:02d}/{epochs} | Loss: {total_loss/len(train_loader):.4f} | LR: {current_lr:.6f} | Val Acc: {eval_results['accuracy']:.4f} | Val Macro-F1: {val_f1:.4f}")
         
-        # Lưu mô hình tốt nhất
         if val_f1 > best_f1:
             best_f1 = val_f1
             torch.save(model.state_dict(), str(best_model_path))
-            print(f"Đã lưu mô hình tốt nhất đạt Macro-F1: {best_f1:.4f}")
+            print(f"   --> Luu model tot nhat voi Macro-F1: {best_f1:.4f}")
 
-    print("\n HOÀN TẤT HUẤN LUYỆN! BÁO CÁO KẾT QUẢ TỐT NHẤT:")
-    # Tải lại model tốt nhất và in báo cáo chuẩn
-    model.load_state_dict(torch.load(str(best_model_path)))
+    print("\nHOAN TAT HUAN LUYEN! BAO CAO KET QUA TOT NHAT:")
+    model.load_state_dict(torch.load(str(best_model_path), weights_only=False))
     model.eval()
     all_preds = []
     all_trues = []
@@ -109,14 +110,20 @@ def main():
     final_eval = Evaluator.evaluate(all_trues, all_preds)
     Evaluator.print_report(final_eval)
 
-    # Xuất ra định dạng ONNX
-    print("\n⏳ Đang xuất mô hình ra định dạng ONNX để triển khai CPU...")
+    # Xuat ONNX voi co che bao ve an toan
+    print("\nDang xuat mo hinh ra ONNX...")
     onnx_path = best_model_path.with_suffix('.onnx')
     dummy_input = torch.randn(1, 3, 30, 17).to(device)
-    torch.onnx.export(model, dummy_input, str(onnx_path), 
-                      export_params=True, opset_version=12, 
-                      input_names=['input'], output_names=['output'])
-    print(f"Đã xuất ONNX thành công tại: {onnx_path}")
+    try:
+        torch.onnx.export(
+            model, dummy_input, str(onnx_path),
+            export_params=True, opset_version=12,
+            input_names=['input'], output_names=['output'],
+            dynamic_axes={'input': {0: 'batch'}, 'output': {0: 'batch'}}
+        )
+        print(f"Xuat ONNX thanh cong tai: {onnx_path}")
+    except Exception as e:
+        print(f"Canh bao: Xuat truc tiep chua thanh cong ({e}). Vui long chay export_onnx.py sau khi cai dat onnxscript.")
 
 if __name__ == "__main__":
     main()
