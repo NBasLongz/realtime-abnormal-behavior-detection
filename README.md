@@ -1,4 +1,4 @@
-# Hệ thống Giám sát Y tế Thông minh: Phát hiện Té ngã Bảo vệ Quyền riêng tư (Smart Healthcare - Privacy-Preserving Fall Detection)
+# Hệ thống Giám sát Y tế Thông minh (Smart Healthcare - Privacy-Preserving Fall Detection)
 
 <p align="center">
   <img src="https://img.shields.io/badge/Domain-Smart_Healthcare-00C853" alt="Domain" />
