@@ -60,11 +60,24 @@ def main():
     else:
         print(f"CẢNH BÁO: Không tìm thấy pretrained weights tại {weights_path}. Sẽ train từ đầu (Từ chối Transfer Learning).")
 
+    # Tính trọng số nghịch đảo tần suất (Inverse Frequency Class Weights) để phạt nặng lỗi ở lớp thiểu số Staggering
+    class_counts = np.bincount(y_train, minlength=3)
+    total_samples = len(y_train)
+    weights = total_samples / (3.0 * np.maximum(class_counts, 1).astype(np.float32))
+    # Tăng nhẹ trọng số phạt lớp Staggering (index 1) để model ưu tiên phân biệt
+    weights[1] *= 1.3
+    class_weights = torch.tensor(weights, dtype=torch.float32).to(device)
+    print(f"Phân bổ tập Train: Normal={class_counts[0]}, Staggering={class_counts[1]}, Falling={class_counts[2]}")
+    print(f"Trọng số hàm Loss (Class Weights): Normal={weights[0]:.2f}, Staggering={weights[1]:.2f}, Falling={weights[2]:.2f}")
+
     # Chỉ định Optimizer, Scheduler & Loss Function
     epochs = 40
-    optimizer = torch.optim.AdamW(model.parameters(), lr=0.001, weight_decay=1e-4)
+    early_stop_patience = 12
+    early_stop_counter = 0
+
+    optimizer = torch.optim.AdamW(model.parameters(), lr=0.001, weight_decay=3e-4)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs, eta_min=1e-5)
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss(weight=class_weights)
 
     best_f1 = 0.0
     best_model_path = PROJECT_ROOT / "weights" / "classification" / "ctrgcn_best.pt"
@@ -103,8 +116,14 @@ def main():
         # Lưu mô hình tốt nhất
         if val_f1 > best_f1:
             best_f1 = val_f1
+            early_stop_counter = 0
             torch.save(model.state_dict(), str(best_model_path))
             print(f"Đã lưu mô hình tốt nhất đạt Macro-F1: {best_f1:.4f}")
+        else:
+            early_stop_counter += 1
+            if early_stop_counter >= early_stop_patience:
+                print(f"\n[Dừng sớm - Early Stopping] Mô hình không cải thiện Macro-F1 trong {early_stop_patience} epoch liên tiếp.")
+                break
 
     print("\nHOÀN TẤT HUẤN LUYỆN! BÁO CÁO KẾT QUẢ TỐT NHẤT:")
     # Tải lại model tốt nhất và in báo cáo chuẩn

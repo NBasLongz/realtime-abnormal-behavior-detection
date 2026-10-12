@@ -30,7 +30,7 @@ def get_group_id(filename: str) -> str:
         
     return filename.split("_id")[0]
 
-def augment_skeleton(keypoints: np.ndarray) -> List[np.ndarray]:
+def augment_skeleton(keypoints: np.ndarray, extra: bool = False) -> List[np.ndarray]:
     """
     Kỹ thuật Data Augmentation cho khung xương (CHỈ ÁP DỤNG TRÊN TẬP HUẤN LUYỆN)
     Input: keypoints shape [T, 17, 3] (Frames, Joints, [x, y, conf])
@@ -62,6 +62,18 @@ def augment_skeleton(keypoints: np.ndarray) -> List[np.ndarray]:
     for idx in drop_indices:
         dropped_kp[idx] = dropped_kp[idx - 1]
     variations.append(dropped_kp)
+
+    # 4. Mở rộng cho lớp thiểu số (Scale Jitter & Translation)
+    if extra:
+        scale_val = random.choice([0.92, 1.08])
+        scaled_kp = keypoints.copy()
+        scaled_kp[:, :, :2] *= scale_val
+        variations.append(scaled_kp)
+
+        shift = np.random.uniform(-0.02, 0.02, size=(1, 1, 2))
+        shifted_kp = keypoints.copy()
+        shifted_kp[:, :, :2] += shift
+        variations.append(shifted_kp)
 
     return variations
 
@@ -152,8 +164,9 @@ def build_gcn_dataset_zero_leakage(data_dir: Path, test_ratio: float = 0.2):
                     seq = normalize_skeleton(seq)
                     total_train_orig += 1
 
-                    # Augmentation x4 cho tập train
-                    for aug_seq in augment_skeleton(seq):
+                    # Augmentation x4 (hoặc x6 cho lớp thiểu số staggering) cho tập train
+                    is_minority = (cls_name == "staggering")
+                    for aug_seq in augment_skeleton(seq, extra=is_minority):
                         # [30(T), 17(V), 3(C)] -> [3(C), 30(T), 17(V)]
                         gcn_format = np.transpose(aug_seq, (2, 0, 1))
                         train_x.append(gcn_format)
