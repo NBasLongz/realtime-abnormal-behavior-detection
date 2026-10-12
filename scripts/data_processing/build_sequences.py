@@ -61,14 +61,7 @@ def main():
     # CHỈ BUILD SEQUENCE CHO 3 CLASS HỌC SÂU (BỎ LOITERING):
     target_classes = [c for c in settings.classes if c != "loitering"]
     
-    tracker = PoseTracker(
-        str(settings.weights_dir / "detection/yolov8s-pose.pt"),
-        settings.device
-    )
-
-    print("=" * 50)
-    print("BUILDING SKELETON SEQUENCES (EXCLUDING LOITERING)")
-    print("=" * 50)
+    tracker = None
 
     for cls in target_classes:
         class_dir = root_raw / cls
@@ -87,10 +80,26 @@ def main():
             video_files.extend(class_dir.glob(ext))
         video_files = sorted(list(set(video_files)))
 
-        for video_file in video_files:
-            if len(list(out_dir.glob(f"{video_file.stem}_id*.npy"))) > 0:
-                continue
-            
+        # Kiểm tra các video chưa trích xuất
+        pending_videos = [
+            v for v in video_files 
+            if len(list(out_dir.glob(f"{v.stem}_id*.npy"))) == 0
+        ]
+
+        if not pending_videos:
+            existing_count = len(list(out_dir.glob("*.npy")))
+            print(f"  Đã trích xuất trước đó ({existing_count} file .npy). Bỏ qua bước trích xuất cho lớp này.")
+            continue
+
+        print(f"  Phát hiện {len(pending_videos)}/{len(video_files)} video chưa trích xuất. Bắt đầu xử lý...")
+
+        if tracker is None:
+            tracker = PoseTracker(
+                str(settings.weights_dir / "detection/yolov8s-pose.pt"),
+                settings.device
+            )
+
+        for video_file in pending_videos:
             build_sequences_for_video(video_file, out_dir, tracker, min_len=30)
             print(f"  Processed: {video_file.name}")
 

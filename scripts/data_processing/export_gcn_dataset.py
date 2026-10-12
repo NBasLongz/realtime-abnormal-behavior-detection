@@ -208,9 +208,12 @@ if __name__ == "__main__":
 
     X_tr, Y_tr, X_te, Y_te = build_gcn_dataset_zero_leakage(data_in_dir)
 
-    if len(X_tr) > 0 and len(X_te) > 0:
-        np.save(str(data_out_dir / 'gcn_train_x.npy'), X_tr)
-        np.save(str(data_out_dir / 'gcn_train_y.npy'), Y_tr)
-        np.save(str(data_out_dir / 'gcn_test_x.npy'), X_te)
-        np.save(str(data_out_dir / 'gcn_test_y.npy'), Y_te)
-        print(f"\nĐã lưu thành công các file GCN tại: {data_out_dir}")
+    if len(X_tr) == 0 or len(X_te) == 0:
+        print("\n[LỖI NGHIÊM TRỌNG] Không tìm thấy dữ liệu khung xương nào trong data/processed/sequences! Hãy chạy bước trích xuất (build_sequences.py) trước.")
+        sys.exit(1)
+
+    np.save(str(data_out_dir / 'gcn_train_x.npy'), X_tr)
+    np.save(str(data_out_dir / 'gcn_train_y.npy'), Y_tr)
+    np.save(str(data_out_dir / 'gcn_test_x.npy'), X_te)
+    np.save(str(data_out_dir / 'gcn_test_y.npy'), Y_te)
+    print(f"\nĐã lưu thành công các file GCN tại: {data_out_dir}")
